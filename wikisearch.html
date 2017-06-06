@@ -1,0 +1,6 @@
+<script>
+const endpoint = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=ssc%20napoli&origin=*';
+fetch(endpoint)
+.then(data => data.json())
+.then(json => console.log(json))
+</script>
