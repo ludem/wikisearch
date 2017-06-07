@@ -1,6 +1,24 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <input type="text"></input>
+    </body>
+</html>
+
+
 <script>
-const endpoint = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=ssc%20napoli&origin=*';
-fetch(endpoint)
+
+const endpoint = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&origin=*&gsrsearch=';
+function searchWP (keywords) {
+fetch(encodeURI(endpoint+keywords))
 .then(data => data.json())
-.then(json => console.log(json))
+.then(json => json.query.pages)
+.then(obj => Object.keys(obj).map(key => obj[key]))
+.then(array => array.map(el => el.extract))
+.then(exts => console.log(exts))
+.catch(e => console.log(e))
+}
+const searchBox = document.querySelector('input');
+searchBox.addEventListener('keyup', e => searchWP(searchBox.value));
 </script>
