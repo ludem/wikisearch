@@ -3,22 +3,49 @@
     </head>
     <body>
         <input type="text"></input>
+        <ul id="list">
+        </ul>
     </body>
 </html>
 
 
 <script>
+const getProperty = prop => x => x[prop];
+const getTitle = getProperty('title');
+const getExtract = getProperty('extract')
+
+const extractProps = el => {
+    var newElement = {};
+    newElement.title = el.title;
+    newElement.extract = el.extract;
+    return newElement;
+}
+
+const html = obj => "<li>"+obj.title+"</li>";
+
+
+
 
 const endpoint = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&origin=*&gsrsearch=';
 function searchWP (keywords) {
-fetch(encodeURI(endpoint+keywords))
-.then(data => data.json())
-.then(json => json.query.pages)
-.then(obj => Object.keys(obj).map(key => obj[key]))
-.then(array => array.map(el => el.extract))
-.then(exts => console.log(exts))
-.catch(e => console.log(e))
+if (!keywords.trim()) {
+    list.innerHTML="";
+    return;
 }
+fetch(endpoint + encodeURIComponent(keywords))
+    .then(data => data.json())
+    .then(json => json.query.pages)
+    .then(obj => Object.keys(obj).map(key => obj[key]))
+    .then(array => array.map(el => extractProps(el)))
+    .then(exts => exts.map(html))
+    .then(html => displayEntries(html))
+    .catch(e => console.log(e))
+}
+function displayEntries(html) {
+    list.innerHTML = html.join('');
+}
+
+const list = document.querySelector('#list');
 const searchBox = document.querySelector('input');
 searchBox.addEventListener('keyup', e => searchWP(searchBox.value));
 </script>
