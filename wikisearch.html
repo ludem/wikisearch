@@ -21,28 +21,23 @@ const extractProps = el => {
     return newElement;
 }
 
-const html = obj => "<li>"+obj.title+"</li>";
-
-
-
+const createLiElement = (acc, obj) => acc += "<li>"+obj.title+"</li>";
+const clearHTMLElement = el => el.innerHTML = "";
 
 const endpoint = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&origin=*&gsrsearch=';
 function searchWP (keywords) {
-if (!keywords.trim()) {
-    list.innerHTML="";
-    return;
-}
-fetch(endpoint + encodeURIComponent(keywords))
+    clearHTMLElement(list);
+    fetch(endpoint + encodeURIComponent(keywords))
     .then(data => data.json())
     .then(json => json.query.pages)
     .then(obj => Object.keys(obj).map(key => obj[key]))
     .then(array => array.map(el => extractProps(el)))
-    .then(exts => exts.map(html))
+    .then(exts => exts.reduce(createLiElement, ""))
     .then(html => displayEntries(html))
     .catch(e => console.log(e))
 }
 function displayEntries(html) {
-    list.innerHTML = html.join('');
+    list.innerHTML = html
 }
 
 const list = document.querySelector('#list');
