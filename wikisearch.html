@@ -1,15 +1,39 @@
 <html>
     <head>
+        <title>Wikipedia Search</title>
+        <style>
+            body {
+                text-align: center;
+            }
+            #list {
+                display: flex;
+                flex-wrap: wrap;
+                }
+            .result{
+                border: 1px solid red;
+                margin: 1rem;
+                width: 10rem;
+                height: auto;
+            }
+            .title {
+                font-weight: bold;
+            }
+            .extract {
+                font-size: 0.8rem;
+            }
+        </style>
     </head>
     <body>
+        <a href="https://en.wikipedia.org/wiki/Special:Random" target="_tab">Random Article</a>
         <input type="text"></input>
-        <ul id="list">
-        </ul>
+        <div id="list">
+        </div>
     </body>
 </html>
 
 
 <script>
+const comp = f => g => x => f(g(x));
 const getProperty = prop => x => x[prop];
 const getTitle = getProperty('title');
 const getExtract = getProperty('extract')
@@ -21,7 +45,12 @@ const extractProps = el => {
     return newElement;
 }
 
-const createLiElement = (acc, obj) => acc += "<li>"+obj.title+"</li>";
+const createLiElement = (acc, obj) => acc += '<div class="result">'+
+                                             '   <div class="title">'+obj.title+
+                                             '   </div>'+
+                                             '  <div class="extract">'+obj.extract+
+                                             '  </div>'+
+                                             '</div>';
 const clearHTMLElement = el => el.innerHTML = "";
 
 const endpoint = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&origin=*&gsrsearch=';
@@ -31,7 +60,7 @@ function searchWP (keywords) {
     .then(data => data.json())
     .then(json => json.query.pages)
     .then(obj => Object.keys(obj).map(key => obj[key]))
-    .then(array => array.map(el => extractProps(el)))
+    .then(array => array.map(extractProps))
     .then(exts => exts.reduce(createLiElement, ""))
     .then(html => displayEntries(html))
     .catch(e => console.log(e))
@@ -42,5 +71,5 @@ function displayEntries(html) {
 
 const list = document.querySelector('#list');
 const searchBox = document.querySelector('input');
-searchBox.addEventListener('keyup', e => searchWP(searchBox.value));
+searchBox.addEventListener('keyup', e => comp(searchWP)(encodeURIComponent)(searchBox.value));
 </script>
