@@ -71,5 +71,6 @@ function displayEntries(html) {
 
 const list = document.querySelector('#list');
 const searchBox = document.querySelector('input');
-searchBox.addEventListener('keyup', e => comp(searchWP)(encodeURIComponent)(searchBox.value));
+searchBox.addEventListener('keyup', e => searchWP(searchBox.value));
+searchBox.addEventListener('change', e => searchWP(searchBox.value));
 </script>
