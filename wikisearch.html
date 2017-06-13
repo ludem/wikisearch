@@ -14,7 +14,7 @@
             #list {
                 display: flex;
                 flex-wrap: wrap;
-                justify-content: flex-start;
+                justify-content: center;
                 
                 }
             
@@ -41,32 +41,28 @@
                 font-size:0.8rem;
             }
 
-            h1{
+            .title h1{
 				font-size: 0.7rem;
 				color:silver;
 			}
             
             a {
-
                 color: cornflowerblue;
                 text-decoration: none;
             }
+           
         </style>
     </head>
     <body>
-    <div>
-			<h1>"Wikipedia Search" by <a href="https://codepen.io/ludem/" target="_tab">ludem</a></h1>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" id="sample3">     
-        <label class="mdl-textfield__label" for="sample3">Search Wikipedia...</label>
-  </div>
-  
-   <div>
-        <a id="random" href="https://en.wikipedia.org/wiki/Special:Random" target="_tab">Pick a Random Article</a>
+        <div class="title">
+		    <h1>"Wikipedia Search" by <a href="https://codepen.io/ludem/" target="_tab">ludem</a></h1>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="sample3">     
+                <label class="mdl-textfield__label" for="sample3">Search Wikipedia...</label>
+            </div>
+        <div>
+            <a id="random" href="https://en.wikipedia.org/wiki/Special:Random" target="_tab">Pick a Random Article</a>
         </div>
-
-        
-  
         <div id="list">
         </div>
     </body>
@@ -105,12 +101,12 @@ function searchWP (keywords) {
     .then(data => data.json())
     .then(json => json.query.pages)
     .then(obj => Object.keys(obj).map(key => obj[key]))
-    .then(ob => {console.log(ob); return ob;})
     .then(array => array.map(extractProps))
     .then(exts => exts.reduce(createLiElement, ""))
     .then(html => displayEntries(html))
-    .catch(e => console.log(e))
+    .catch(e => console.log(e));
 }
+
 function displayEntries(html) {
     list.innerHTML = html
 }
